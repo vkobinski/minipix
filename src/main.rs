@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{env, sync::Arc};
 
 use axum::{
     extract::{Path, State},
@@ -18,9 +18,12 @@ type AppState = Arc<PostgresRepository>;
 
 #[tokio::main]
 async fn main() {
-    let database_url = "postgresql://minipix:minipix@localhost:5432/minipix";
+    dotenv().ok();
 
-    let state = Arc::new(PostgresRepository::connect(database_url, 3).await.unwrap());
+    let database_url = env::var("DATABASE_URl")
+        .unwrap_or("postgresql://minipix:minipix@localhost:5432/minipix".to_string());
+
+    let state = Arc::new(PostgresRepository::connect(&database_url, 3).await.unwrap());
 
     tokio::spawn(check_timeout(state.clone()));
 
