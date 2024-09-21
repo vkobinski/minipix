@@ -7,6 +7,7 @@ use axum::{
     routing::{get, post},
     Json, Router,
 };
+use dotenv::dotenv;
 use models::transaction::NewTransaction;
 use persistence::{check_timeout, PostgresRepository};
 use tower_http::services::ServeDir;
