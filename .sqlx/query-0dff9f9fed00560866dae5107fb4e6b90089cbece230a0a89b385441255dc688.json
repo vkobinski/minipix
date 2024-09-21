@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                            UPDATE transaction\n                            SET status = 'timeout'\n                            WHERE transaction_id = $1\n                            RETURNING transaction_id\n                            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "transaction_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "0dff9f9fed00560866dae5107fb4e6b90089cbece230a0a89b385441255dc688"
+}

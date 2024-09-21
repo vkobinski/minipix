@@ -1,0 +1,14 @@
+version: "3.5"
+
+services:
+  db:
+    image: postgres:16
+    hostname: db
+    environment:
+      - POSTGRES_PASSWORD=minipix
+      - POSTGRES_USER=minipix
+      - POSTGRES_DB=minipix
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/script.sql:/docker-entrypoint-initdb.d/script.sql
