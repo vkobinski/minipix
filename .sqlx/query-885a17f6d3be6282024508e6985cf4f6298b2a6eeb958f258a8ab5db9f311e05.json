@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            UPDATE transaction \n            SET when_finished = NOW(), status = 'success'\n            WHERE transaction_id = $1 AND status IS NULL\n            RETURNING transaction_id\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "transaction_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "885a17f6d3be6282024508e6985cf4f6298b2a6eeb958f258a8ab5db9f311e05"
+}

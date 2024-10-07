@@ -2,7 +2,7 @@ use std::{env, sync::Arc};
 
 use axum::{
     extract::{Path, State},
-    http::StatusCode,
+    http::{Method, StatusCode},
     response::IntoResponse,
     routing::{get, post},
     Json, Router,
@@ -10,7 +10,10 @@ use axum::{
 use dotenv::dotenv;
 use models::transaction::NewTransaction;
 use persistence::{check_timeout, PostgresRepository};
-use tower_http::services::ServeDir;
+use tower_http::{
+    cors::{Any, CorsLayer},
+    services::ServeDir,
+};
 
 mod models;
 mod persistence;
@@ -28,6 +31,10 @@ async fn main() {
 
     tokio::spawn(check_timeout(state.clone()));
 
+    let cors = CorsLayer::new()
+        .allow_methods([Method::GET, Method::POST])
+        .allow_origin(Any);
+
     let app = Router::new()
         .route("/transaction/:id_transaction", get(get_transaction))
         .route("/client/:id_client", get(get_client))
@@ -39,7 +46,8 @@ async fn main() {
         .route("/client/:id_client/transaction", post(create_transaction))
         .route("/transaction/:id_transaction", post(end_transaction))
         .nest_service("/", ServeDir::new("dist"))
-        .with_state(state);
+        .with_state(state)
+        .layer(cors);
 
     let listener = tokio::net::TcpListener::bind(format!("[::1]:{}", 3000))
         .await
